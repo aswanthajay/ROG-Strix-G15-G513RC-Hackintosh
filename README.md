@@ -7,6 +7,14 @@ OpenCore EFI configuration for the **ASUS ROG Strix G15 (2022) G513RC** gaming l
 
 ---
 
+> [!CAUTION]
+> **CRITICAL REQUIREMENT - MUX Switch / GPU Mode (G-Helper / Armoury Crate):**
+> You **MUST set your GPU Mode to "Standard" (Hybrid / Optimus)** in G-Helper or Armoury Crate before booting macOS!
+> - In **Ultimate Mode**, the laptop's physical MUX switch wires the internal display exclusively to the NVIDIA RTX 3050, and completely disables the AMD Radeon 680M iGPU in BIOS. Because NVIDIA Ampere (RTX 30-series) has **zero support in macOS**, booting in Ultimate Mode will cause complete display failure, installer freezes, or black screens.
+> - In **Standard Mode**, the internal display is connected to the AMD Radeon 680M iGPU, allowing macOS to drive the screen while OpenCore safely disables the unsupported RTX 3050 dGPU.
+
+---
+
 ## 💻 Hardware Specifications
 
 | Component | Specification | macOS Status |
