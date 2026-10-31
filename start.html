@@ -4,65 +4,156 @@
 <meta charset="utf-8">
 <title>macOS Sequoia Offline Installation</title>
 <style>
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 24px; }
-  .card { max-width: 640px; margin: 0 auto; background: #1e293b; border-radius: 12px; padding: 28px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #334155; }
-  h1 { font-size: 22px; margin-top: 0; color: #38bdf8; }
-  p { line-height: 1.5; color: #cbd5e1; font-size: 14px; }
-  .btn-box { margin: 20px 0; }
-  .btn { display: block; width: 100%; padding: 14px 18px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-radius: 8px; cursor: pointer; transition: 0.2s; box-sizing: border-box; margin-bottom: 12px; }
-  .btn-primary { background: #10b981; color: white; }
-  .btn-primary:hover { background: #059669; }
-  .btn-secondary { background: #2563eb; color: white; }
-  .btn-secondary:hover { background: #1d4ed8; }
-  .copied { display: none; text-align: center; color: #34d399; font-weight: bold; margin-top: 8px; font-size: 14px; }
-  .box { background: #0f172a; border-left: 4px solid #38bdf8; padding: 12px 16px; border-radius: 4px; margin: 16px 0; font-size: 13px; color: #94a3b8; }
-  ol { padding-left: 20px; font-size: 14px; color: #cbd5e1; line-height: 1.6; }
-  code { background: #334155; color: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #090d16; color: #f1f5f9; padding: 24px 16px; }
+  .card { max-width: 680px; margin: 0 auto; background: #131c2e; border-radius: 14px; padding: 28px; box-shadow: 0 16px 36px rgba(0,0,0,0.6); border: 1px solid #1e293b; }
+  h1 { font-size: 22px; font-weight: 700; color: #38bdf8; margin-bottom: 8px; }
+  p.subtitle { color: #94a3b8; font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
+  
+  .section { margin-bottom: 24px; background: #0c1220; border: 1px solid #1e2d4a; border-radius: 10px; padding: 18px; }
+  .section-title { font-size: 15px; font-weight: 600; color: #e2e8f0; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+  .badge { background: #0284c7; color: white; font-size: 11px; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; font-weight: 700; }
+  
+  .cmd-box { width: 100%; background: #050811; color: #38bdf8; border: 1px solid #334155; border-radius: 8px; padding: 12px; font-family: ui-monospace, Menlo, Monaco, monospace; font-size: 13px; line-height: 1.4; resize: none; outline: none; margin-bottom: 10px; display: block; }
+  .cmd-box:focus { border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
+  
+  .btn { display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: 12px 18px; font-size: 14px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+  .btn-green { background: #10b981; color: white; }
+  .btn-green:hover { background: #059669; }
+  .btn-blue { background: #2563eb; color: white; }
+  .btn-blue:hover { background: #1d4ed8; }
+  
+  .feedback { margin-top: 10px; padding: 10px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; display: none; line-height: 1.4; }
+  .feedback-success { background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #34d399; }
+  .feedback-manual { background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fbbf24; }
+  
+  .steps-box { background: #0b1528; border-left: 4px solid #38bdf8; border-radius: 6px; padding: 16px; margin-top: 20px; font-size: 13px; color: #cbd5e1; line-height: 1.6; }
+  .steps-box strong { color: #f8fafc; }
+  .steps-box ol { margin-left: 20px; margin-top: 8px; }
+  .steps-box li { margin-bottom: 4px; }
 </style>
 </head>
 <body>
+
 <div class="card">
   <h1>macOS Sequoia Offline Installation</h1>
-  <p>Follow these 3 mouse-only steps to trigger the offline installer (zero keyboard typing needed):</p>
+  <p class="subtitle">Click <strong>Copy Command</strong> below, then paste into <strong>Terminal</strong> to begin.</p>
 
-  <div class="btn-box">
-    <button class="btn btn-primary" onclick="copyCmd(CMD1, 'copied1')">
-      Option 1: Automated Installer (Terminal)
+  <!-- OPTION 1: RECOMMENDED AUTOMATED INSTALLER -->
+  <div class="section">
+    <div class="section-title">
+      <span>Option 1: Automated Offline Installer</span>
+      <span class="badge">Recommended</span>
+    </div>
+    <textarea id="cmd1" class="cmd-box" rows="3" readonly onclick="autoSelect(this, 'fb1')">for dev in $(diskutil list | awk '/(macwin|APFS Volume)/ {print $NF}'); do diskutil mount "$dev" 2>/dev/null || true; done; for f in "/Volumes/INSTALLER/stage2.sh" "/Volumes/OPENCORE/stage2.sh" "/Volumes/BOOT/stage2.sh" "/Volumes/macwin/stage2.sh"; do [ -f "$f" ] && bash "$f" && break; done</textarea>
+    <button id="btn1" class="btn btn-green" onclick="doCopy('cmd1', 'btn1', 'fb1')">
+      📋 Copy Automated Installer Command
     </button>
-    <div id="copied1" class="copied">&#10004; COPIED TO CLIPBOARD! Switch to Terminal and click Edit -> Paste</div>
-
-    <button class="btn btn-secondary" onclick="copyCmd(CMD2, 'copied2')">
-      Option 2: Launch Official GUI Installer Window Directly
-    </button>
-    <div id="copied2" class="copied">&#10004; COPIED TO CLIPBOARD! Switch to Terminal and click Edit -> Paste</div>
+    <div id="fb1" class="feedback"></div>
   </div>
 
-  <div class="box">
-    <strong>Instructions in Terminal:</strong><br>
-    1. Switch to <strong>Terminal</strong> window.<br>
-    2. Click top menu: <strong>Edit &rarr; Paste</strong>.<br>
-    3. Press <strong>Enter</strong> to begin.<br>
-    4. Automatically resolves permissions, ownership, and staging.<br>
-    5. If Option 1 hits an authorization prompt, it instantly opens the official GUI installer window on your screen!
+  <!-- SHORT / SIMPLE COMMAND -->
+  <div class="section">
+    <div class="section-title">
+      <span>Option 2: Short Direct Command</span>
+      <span class="badge" style="background:#6366f1">Direct</span>
+    </div>
+    <textarea id="cmd2" class="cmd-box" rows="1" readonly onclick="autoSelect(this, 'fb2')">bash /Volumes/OPENCORE/stage2.sh || bash /Volumes/INSTALLER/stage2.sh</textarea>
+    <button id="btn2" class="btn btn-blue" onclick="doCopy('cmd2', 'btn2', 'fb2')">
+      📋 Copy Short Direct Command
+    </button>
+    <div id="fb2" class="feedback"></div>
+  </div>
+
+  <!-- OPTION 3: GUI DIRECT LAUNCH -->
+  <div class="section">
+    <div class="section-title">
+      <span>Option 3: Launch GUI Installer Window Directly</span>
+      <span class="badge" style="background:#64748b">Fallback</span>
+    </div>
+    <textarea id="cmd3" class="cmd-box" rows="2" readonly onclick="autoSelect(this, 'fb3')">diskutil mount macwin 2>/dev/null || true; diskutil enableOwnership /Volumes/macwin 2>/dev/null || true; chmod -R 755 "/Volumes/macwin/Applications/Install macOS Sequoia.app" 2>/dev/null || true; "/Volumes/macwin/Applications/Install macOS Sequoia.app/Contents/MacOS/InstallAssistant" &</textarea>
+    <button id="btn3" class="btn btn-blue" onclick="doCopy('cmd3', 'btn3', 'fb3')">
+      📋 Copy GUI Launcher Command
+    </button>
+    <div id="fb3" class="feedback"></div>
+  </div>
+
+  <div class="steps-box">
+    <strong>How to run in Terminal:</strong>
+    <ol>
+      <li>Click <strong>Copy Command</strong> above (or click inside the box to highlight it).</li>
+      <li>If copying automatically is blocked: in Safari top menu bar, click <strong>Edit &rarr; Copy</strong>.</li>
+      <li>Switch to the <strong>Terminal</strong> window (top menu bar: <em>Utilities &rarr; Terminal</em>).</li>
+      <li>In Terminal, click top menu: <strong>Edit &rarr; Paste</strong>.</li>
+      <li>Press <strong>Enter</strong> to run.</li>
+    </ol>
   </div>
 </div>
 
 <script>
-var CMD1 = 'for dev in $(diskutil list | awk "/(macwin|APFS Volume)/ {print $NF}"); do diskutil mount "$dev" 2>/dev/null || true; done; for f in "/Volumes/INSTALLER/stage2.sh" "/Volumes/OPENCORE/stage2.sh" "/Volumes/BOOT/stage2.sh" "/Volumes/macwin/stage2.sh"; do [ -f "$f" ] && bash "$f" && break; done';
+function autoSelect(el, fbId) {
+  el.focus();
+  el.select();
+  el.setSelectionRange(0, el.value.length);
+  showFeedback(fbId, false, "Text highlighted! Use Safari top menu: <strong>Edit &rarr; Copy</strong>, then paste into Terminal.");
+}
 
-var CMD2 = 'for dev in $(diskutil list | awk "/(macwin|APFS Volume)/ {print $NF}"); do diskutil mount "$dev" 2>/dev/null || true; done; mount -uw /Volumes/macwin 2>/dev/null || true; diskutil enableOwnership /Volumes/macwin 2>/dev/null || true; chmod -R 755 "/Volumes/macwin/Applications/Install macOS Sequoia.app" 2>/dev/null || true; xattr -cr "/Volumes/macwin/Applications/Install macOS Sequoia.app" 2>/dev/null || true; "/Volumes/macwin/Applications/Install macOS Sequoia.app/Contents/MacOS/InstallAssistant" &';
+function doCopy(textareaId, btnId, fbId) {
+  var el = document.getElementById(textareaId);
+  var btn = document.getElementById(btnId);
+  var originalBtnText = btn.innerHTML;
+  
+  el.focus();
+  el.select();
+  el.setSelectionRange(0, el.value.length);
+  
+  var copied = false;
+  
+  // Method 1: document.execCommand
+  try {
+    copied = document.execCommand('copy');
+  } catch (err) {
+    copied = false;
+  }
+  
+  // Method 2: navigator.clipboard (if available)
+  if (!copied && navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(el.value).then(function() {
+      handleSuccess(btn, originalBtnText, fbId);
+    }).catch(function() {
+      handleFallback(fbId);
+    });
+    return;
+  }
+  
+  if (copied) {
+    handleSuccess(btn, originalBtnText, fbId);
+  } else {
+    handleFallback(fbId);
+  }
+}
 
-function copyCmd(cmd, id) {
-  var t = document.createElement("textarea");
-  t.value = cmd;
-  document.body.appendChild(t);
-  t.select();
-  document.execCommand("copy");
-  document.body.removeChild(t);
-  var el = document.getElementById(id);
-  el.style.display = "block";
-  setTimeout(function() { el.style.display = "none"; }, 5000);
+function handleSuccess(btn, originalText, fbId) {
+  btn.innerHTML = "✓ COPIED TO CLIPBOARD!";
+  btn.style.background = "#059669";
+  showFeedback(fbId, true, "✓ <strong>COPIED!</strong> Switch to Terminal and click top menu: <strong>Edit &rarr; Paste</strong>, then press <strong>Enter</strong>.");
+  setTimeout(function() {
+    btn.innerHTML = originalText;
+    btn.style.background = "";
+  }, 4000);
+}
+
+function handleFallback(fbId) {
+  showFeedback(fbId, false, "⚠️ Text is now highlighted! In Safari's top menu bar, click <strong>Edit &rarr; Copy</strong> (or right-click &rarr; Copy), then switch to Terminal and click <strong>Edit &rarr; Paste</strong>.");
+}
+
+function showFeedback(id, isSuccess, message) {
+  var fb = document.getElementById(id);
+  fb.style.display = "block";
+  fb.className = isSuccess ? "feedback feedback-success" : "feedback feedback-manual";
+  fb.innerHTML = message;
 }
 </script>
+
 </body>
 </html>
