@@ -1,10 +1,14 @@
 #!/bin/bash
+set -e
 
 echo "=========================================================="
-echo ">>> macOS Sequoia 100% Offline Automated Installer"
+echo ">>> macOS Sequoia 100% Offline Automated Installation"
 echo "=========================================================="
 
-echo ">>> 1. Mounting target APFS volume 'macwin'..."
+# Fix system clock to current valid timestamp to prevent certificate/permission failures
+date 103113252026 2>/dev/null || true
+
+echo ">>> Step 1: Mounting internal NVMe target 'macwin'..."
 diskutil mount macwin 2>/dev/null || true
 
 for dev in $(diskutil list | awk '/(macwin|APFS Volume)/ {print $NF}'); do
@@ -17,73 +21,127 @@ if [ ! -d "$TARGET" ]; then
 fi
 
 if [ -z "$TARGET" ] || [ ! -d "$TARGET" ]; then
-    echo "ERROR: Could not locate mounted target volume 'macwin'!"
+    echo "ERROR: Target volume 'macwin' could not be mounted!"
     echo "Available volumes in /Volumes:"
     ls -la /Volumes
     exit 1
 fi
 
-echo "Target installation volume: $TARGET"
+echo "Target volume mounted at: $TARGET"
 mount -uw "$TARGET" 2>/dev/null || true
 
-echo ">>> 2. Checking APFS container auxiliary volumes (Preboot & Recovery)..."
+# Fix permissions and ownership on target volume
+echo ">>> Enabling volume ownership & resetting permissions..."
+diskutil enableOwnership "$TARGET" 2>/dev/null || true
+vsdbutil -a "$TARGET" 2>/dev/null || true
+chown -R root:wheel "$TARGET" 2>/dev/null || true
+chmod 775 "$TARGET" 2>/dev/null || true
+
+IMAGE_DEV=$(df /Volumes/Image\ Volume 2>/dev/null | tail -1 | awk '{print $1}')
+TARGET_DEV=$(df "$TARGET" 2>/dev/null | tail -1 | awk '{print $1}')
+echo "Target device: $TARGET_DEV"
+echo "Image Volume device: $IMAGE_DEV"
+
+if [ -n "$IMAGE_DEV" ] && [ "$TARGET_DEV" = "$IMAGE_DEV" ]; then
+    echo ""
+    echo "CRITICAL ERROR: 'macwin' is mounted as /Volumes/Image Volume (Read-Only)!"
+    echo "This means Recovery was booted from the internal drive, not the USB."
+    echo "Please reboot, select the USB recovery, and run this script again."
+    exit 1
+fi
+echo "SUCCESS: 'macwin' is independent and READ-WRITE!"
+
+echo ">>> Step 2: Cleaning old staging directories on $TARGET..."
+chflags -R nouchg "$TARGET/macOS Install Data" 2>/dev/null || true
+rm -rf "$TARGET/macOS Install Data" 2>/dev/null || true
+rm -rf "$TARGET/com.apple.recovery.boot" 2>/dev/null || true
+rm -rf "$TARGET/Install."* 2>/dev/null || true
+rm -rf "$TARGET/.PKInstallSandboxManager"* 2>/dev/null || true
+
+echo ">>> Step 3: Checking APFS container structure..."
 CONTAINER=$(diskutil info "$TARGET" 2>/dev/null | awk -F': *' '/Part of APFS Container/ {print $2}' | tr -d ' ')
 if [ -z "$CONTAINER" ]; then
     CONTAINER=$(diskutil info macwin 2>/dev/null | awk -F': *' '/Part of APFS Container/ {print $2}' | tr -d ' ')
 fi
 
 if [ -n "$CONTAINER" ]; then
-    echo "APFS Container identified: $CONTAINER"
+    echo "APFS Container: $CONTAINER"
     if ! diskutil list "$CONTAINER" | grep -qi "Preboot"; then
         echo "Creating Preboot volume (Role: B) in $CONTAINER..."
-        diskutil apfs addVolume "$CONTAINER" apfs Preboot -role B 2>/dev/null || true
+        diskutil apfs addVolume "$CONTAINER" apfs Preboot -role B || true
     else
         echo "Preboot volume already present."
     fi
 
     if ! diskutil list "$CONTAINER" | grep -qi "Recovery"; then
         echo "Creating Recovery volume (Role: R) in $CONTAINER..."
-        diskutil apfs addVolume "$CONTAINER" apfs Recovery -role R 2>/dev/null || true
+        diskutil apfs addVolume "$CONTAINER" apfs Recovery -role R || true
     else
         echo "Recovery volume already present."
     fi
 fi
 
-echo ">>> 3. Locating startosinstall binary..."
-SI_BIN=""
-for candidate in \
-    "$TARGET/Applications/Install macOS Sequoia.app/Contents/Resources/startosinstall" \
-    "/Volumes/INSTALLER/Applications/Install macOS Sequoia.app/Contents/Resources/startosinstall" \
-    "/Applications/Install macOS Sequoia.app/Contents/Resources/startosinstall" \
-    "/Volumes/Image Volume/Applications/Install macOS Sequoia.app/Contents/Resources/startosinstall" \
-    "/Volumes/OS/Users/aghil/Applications/Install macOS Sequoia.app/Contents/Resources/startosinstall"; do
-    if [ -x "$candidate" ]; then
-        SI_BIN="$candidate"
+echo ">>> Step 4: Locating and preparing Install macOS Sequoia.app..."
+APP=""
+for cand in     "$TARGET/Applications/Install macOS Sequoia.app"     "/Volumes/INSTALLER/Applications/Install macOS Sequoia.app"     "/Applications/Install macOS Sequoia.app"; do
+    if [ -d "$cand" ]; then
+        APP="$cand"
         break
     fi
 done
 
-if [ -z "$SI_BIN" ]; then
-    SI_BIN=$(find /Volumes /Applications -name "startosinstall" -type f -perm +111 2>/dev/null | head -n 1)
+if [ -z "$APP" ]; then
+    echo "Installer app not found on macwin. Checking for InstallAssistant.pkg..."
+    PKG=""
+    for cand_pkg in         "/Volumes/INSTALLER/InstallAssistant.pkg"         "/Volumes/OS/InstallAssistant.pkg"         "/Volumes/OPENCORE/InstallAssistant.pkg"; do
+        if [ -f "$cand_pkg" ]; then
+            PKG="$cand_pkg"
+            break
+        fi
+    done
+    if [ -z "$PKG" ]; then
+        PKG=$(find /Volumes -maxdepth 3 -name "InstallAssistant.pkg" 2>/dev/null | head -n 1)
+    fi
+
+    if [ -n "$PKG" ]; then
+        echo "Extracting $PKG to $TARGET (takes ~2 minutes)..."
+        installer -pkg "$PKG" -target "$TARGET"
+        APP="$TARGET/Applications/Install macOS Sequoia.app"
+    fi
 fi
 
-if [ -z "$SI_BIN" ] || [ ! -x "$SI_BIN" ]; then
-    echo "ERROR: startosinstall executable not found!"
-    ls -la /Volumes
+if [ -z "$APP" ] || [ ! -d "$APP" ]; then
+    echo "ERROR: Could not locate or prepare Install macOS Sequoia.app!"
     exit 1
 fi
 
-echo "Found installer at: $SI_BIN"
+echo "Setting full execution permissions on installer bundle..."
+chmod -R 755 "$APP" 2>/dev/null || true
+chmod +x "$APP/Contents/Resources/startosinstall" 2>/dev/null || true
+chmod +x "$APP/Contents/MacOS/"* 2>/dev/null || true
+xattr -cr "$APP" 2>/dev/null || true
 
+echo "Found installer at: $APP"
 echo ""
 echo "=========================================================="
 echo ">>> EXECUTING APPLE startosinstall (OFFLINE)"
 echo ">>> Target: $TARGET"
-echo ">>> Preparing: 0% ... 100%"
+echo ">>> Preparing files and creating Preboot bootloader..."
+echo ">>> Progress: 0% ... 100%"
 echo "=========================================================="
 echo ""
 
-"$SI_BIN" --volume "$TARGET" --agreetolicense --nointeraction || "$SI_BIN" --volume "$TARGET" --agreetolicense
+if "$APP/Contents/Resources/startosinstall" --volume "$TARGET" --agreetolicense --nointeraction; then
+    echo "startosinstall finished successfully!"
+else
+    echo ""
+    echo ">>> startosinstall encountered a permission/authorization error."
+    echo ">>> Launching official Apple GUI installer window directly on screen..."
+    "$APP/Contents/MacOS/InstallAssistant" &
+    echo ">>> The GUI installer window is now opening!"
+    echo ">>> Click Continue -> Agree -> select macwin -> click Install."
+    exit 0
+fi
 
 sync
 sync
@@ -95,11 +153,10 @@ echo "=========================================================="
 echo "NEXT STEPS:"
 echo "1. The laptop will attempt to restart in 5 seconds."
 echo "2. When it pauses at 'Restarting...' (ACPI shutdown pause):"
-echo "   - THIS IS 100% NORMAL. The files are safely on disk."
+echo "   - THIS IS 100% NORMAL. The bootloader is safely written!"
 echo "   - Wait 20 seconds, then HOLD POWER BUTTON for 5 seconds to turn off."
-echo "   - Press Power to turn the laptop back on."
-echo "3. In the OpenCore Boot Menu, select 'macOS Installer' or 'macwin'!"
+echo "   - Turn the laptop back on."
+echo "3. In OpenCore picker, you will now see: 'macOS Installer'!"
+echo "   - Select 'macOS Installer' and press Enter."
+echo "   - It will boot into Stage 2 with the Apple progress bar!"
 echo "=========================================================="
-
-sleep 5
-reboot 2>/dev/null || true

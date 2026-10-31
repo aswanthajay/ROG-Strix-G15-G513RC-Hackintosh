@@ -1,199 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>macOS Sequoia 100% Offline Direct Installer</title>
+<meta charset="utf-8">
+<title>macOS Sequoia Offline Installation</title>
 <style>
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: #090d16;
-    color: #f1f5f9;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 95vh;
-    margin: 0;
-    padding: 24px;
-    box-sizing: border-box;
-  }
-  .card {
-    background: #111827;
-    border-radius: 18px;
-    padding: 32px 36px;
-    max-width: 800px;
-    width: 100%;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.7);
-    border: 1px solid #1f2937;
-    text-align: center;
-  }
-  .badge {
-    display: inline-block;
-    padding: 6px 18px;
-    background: #059669;
-    color: #ecfdf5;
-    border-radius: 9999px;
-    font-size: 13px;
-    font-weight: 700;
-    margin-bottom: 18px;
-    letter-spacing: 0.5px;
-  }
-  h1 { font-size: 26px; margin: 0 0 10px 0; color: #ffffff; font-weight: 800; }
-  p.subtitle { font-size: 15px; color: #94a3b8; margin: 0 0 24px 0; line-height: 1.6; }
-  .btn-container { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
-  .btn {
-    border: none;
-    border-radius: 12px;
-    padding: 18px 24px;
-    font-size: 17px;
-    font-weight: 700;
-    cursor: pointer;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.15s ease-in-out;
-  }
-  .btn:active { transform: scale(0.98); }
-  .btn-primary {
-    background: #16a34a;
-    color: #ffffff;
-    box-shadow: 0 4px 18px rgba(22,163,74,0.45);
-  }
-  .btn-primary:hover { background: #15803d; }
-  .btn-subtext { font-size: 13px; font-weight: 500; opacity: 0.9; }
-  #alert-box {
-    display: none;
-    padding: 14px 18px;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  .alert-success { display: block !important; background: #064e3b; color: #a7f3d0; border: 1px solid #059669; }
-  .alert-warning { display: block !important; background: #78350f; color: #fde68a; border: 1px solid #d97706; }
-  .field-label { font-size: 13px; font-weight: 600; color: #94a3b8; text-align: left; margin-bottom: 8px; }
-  textarea {
-    width: 100%;
-    height: 80px;
-    background: #030712;
-    color: #4ade80;
-    font-family: ui-monospace, Menlo, Monaco, Consolas, monospace;
-    font-size: 13px;
-    font-weight: 600;
-    border: 1px solid #374151;
-    border-radius: 10px;
-    padding: 12px;
-    box-sizing: border-box;
-    resize: none;
-  }
-  .steps {
-    text-align: left;
-    background: #030712;
-    padding: 20px 24px;
-    border-radius: 12px;
-    margin-top: 24px;
-    border: 1px solid #1f2937;
-  }
-  .steps h3 { margin: 0 0 12px 0; font-size: 15px; color: #38bdf8; }
-  .steps ol { margin: 0; padding-left: 20px; }
-  .steps li { margin-bottom: 12px; font-size: 14px; color: #cbd5e1; line-height: 1.5; }
-  .steps b { color: #ffffff; }
-  .notice {
-    background: #172554;
-    border: 1px solid #1d4ed8;
-    color: #93c5fd;
-    padding: 14px 18px;
-    border-radius: 10px;
-    font-size: 13px;
-    margin-top: 20px;
-    text-align: left;
-    line-height: 1.6;
-  }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 24px; }
+  .card { max-width: 640px; margin: 0 auto; background: #1e293b; border-radius: 12px; padding: 28px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #334155; }
+  h1 { font-size: 22px; margin-top: 0; color: #38bdf8; }
+  p { line-height: 1.5; color: #cbd5e1; font-size: 14px; }
+  .btn-box { margin: 20px 0; }
+  .btn { display: block; width: 100%; padding: 14px 18px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-radius: 8px; cursor: pointer; transition: 0.2s; box-sizing: border-box; margin-bottom: 12px; }
+  .btn-primary { background: #10b981; color: white; }
+  .btn-primary:hover { background: #059669; }
+  .btn-secondary { background: #2563eb; color: white; }
+  .btn-secondary:hover { background: #1d4ed8; }
+  .copied { display: none; text-align: center; color: #34d399; font-weight: bold; margin-top: 8px; font-size: 14px; }
+  .box { background: #0f172a; border-left: 4px solid #38bdf8; padding: 12px 16px; border-radius: 4px; margin: 16px 0; font-size: 13px; color: #94a3b8; }
+  ol { padding-left: 20px; font-size: 14px; color: #cbd5e1; line-height: 1.6; }
+  code { background: #334155; color: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
 </style>
 </head>
 <body>
-
 <div class="card">
-  <div class="badge">&#10003; 100% OFFLINE PAYLOAD READY ON NVME</div>
-  <h1>macOS Sequoia Automated Installer</h1>
-  <p class="subtitle">Click the button below to copy the command with 1 mouse click (zero typing required):</p>
+  <h1>macOS Sequoia Offline Installation</h1>
+  <p>Follow these 3 mouse-only steps to trigger the offline installer (zero keyboard typing needed):</p>
 
-  <div class="btn-container">
-    <button class="btn btn-primary" onclick="copyInstallerCmd()">
-      <span>&#9654; Click to Copy Automated Installer Command</span>
-      <span class="btn-subtext">Mounts macwin &bull; Configures Preboot &bull; Runs Apple startosinstall</span>
+  <div class="btn-box">
+    <button class="btn btn-primary" onclick="copyCmd(CMD1, 'copied1')">
+      Option 1: Automated Installer (Terminal)
     </button>
+    <div id="copied1" class="copied">&#10004; COPIED TO CLIPBOARD! Switch to Terminal and click Edit -> Paste</div>
+
+    <button class="btn btn-secondary" onclick="copyCmd(CMD2, 'copied2')">
+      Option 2: Launch Official GUI Installer Window Directly
+    </button>
+    <div id="copied2" class="copied">&#10004; COPIED TO CLIPBOARD! Switch to Terminal and click Edit -> Paste</div>
   </div>
 
-  <div id="alert-box"></div>
-
-  <div class="field-label">Command ready for Terminal:</div>
-  <textarea id="cmdBox" readonly onclick="this.select()">diskutil mount macwin 2>/dev/null || true; for dev in $(diskutil list | awk '/(macwin|APFS Volume)/ {print $NF}'); do diskutil mount "$dev" 2>/dev/null || true; done; for f in "/Volumes/macwin/stage2.sh" "/Volumes/OS/Users/aghil/OneDrive/Desktop/The new Hackintosh/stage2.sh" "/Volumes/OS/Users/aghil/stage2.sh" "/Volumes/OS/Users/aghil/install.sh" "/Volumes/OPENCORE/stage2.sh" "/Volumes/INSTALLER/stage2.sh" "$(find /Volumes -name stage2.sh 2>/dev/null | head -n 1)"; do if [ -f "$f" ]; then echo "Running $f..."; bash "$f"; break; fi; done</textarea>
-
-  <div class="steps">
-    <h3>&#128073; Quick 3-Step Instructions:</h3>
-    <ol>
-      <li>Click the green button above (copies to clipboard automatically).</li>
-      <li>Switch to <b>Terminal</b> &rarr; top menu: <b>Edit &rarr; Paste</b> &rarr; press <b>Enter</b>.</li>
-      <li>Watch the output:
-          <ul>
-            <li>It mounts <code>macwin</code> and configures the <code>Preboot</code> volume.</li>
-            <li>It runs Apple's installer and reaches <b>Preparing: 100%</b>.</li>
-            <li>When it reaches <i>Restarting...</i>, the mouse/screen will freeze (normal ACPI pause on AMD). Wait 20 seconds, hold <b>Power button for 5 seconds</b> to power off, then press Power to turn back on!</li>
-          </ul>
-      </li>
-      <li>In OpenCore, select <b>macOS Installer</b> (or <b>macwin</b>) to complete the installation!</li>
-    </ol>
-  </div>
-
-  <div class="notice">
-    &#8505; <b>WHY IT PAUSES AT "RESTARTING...":</b><br>
-    The installation itself succeeds 100%. The pause is only the hardware reboot signal on ASUS AMD laptops. Simply power-cycle with the power button after 20 seconds to boot into the installed system.
+  <div class="box">
+    <strong>Instructions in Terminal:</strong><br>
+    1. Switch to <strong>Terminal</strong> window.<br>
+    2. Click top menu: <strong>Edit &rarr; Paste</strong>.<br>
+    3. Press <strong>Enter</strong> to begin.<br>
+    4. Automatically resolves permissions, ownership, and staging.<br>
+    5. If Option 1 hits an authorization prompt, it instantly opens the official GUI installer window on your screen!
   </div>
 </div>
 
 <script>
-var CMD = 'diskutil mount macwin 2>/dev/null || true; for dev in $(diskutil list | awk \'/(macwin|APFS Volume)/ {print $NF}\'); do diskutil mount "$dev" 2>/dev/null || true; done; for f in "/Volumes/macwin/stage2.sh" "/Volumes/OS/Users/aghil/OneDrive/Desktop/The new Hackintosh/stage2.sh" "/Volumes/OS/Users/aghil/stage2.sh" "/Volumes/OS/Users/aghil/install.sh" "/Volumes/OPENCORE/stage2.sh" "/Volumes/INSTALLER/stage2.sh" "$(find /Volumes -name stage2.sh 2>/dev/null | head -n 1)"; do if [ -f "$f" ]; then echo "Running $f..."; bash "$f"; break; fi; done\n';
+var CMD1 = 'for dev in $(diskutil list | awk "/(macwin|APFS Volume)/ {print $NF}"); do diskutil mount "$dev" 2>/dev/null || true; done; for f in "/Volumes/INSTALLER/stage2.sh" "/Volumes/OPENCORE/stage2.sh" "/Volumes/BOOT/stage2.sh" "/Volumes/macwin/stage2.sh"; do [ -f "$f" ] && bash "$f" && break; done';
 
-function copyInstallerCmd() {
-  var box = document.getElementById('cmdBox');
-  box.value = CMD;
-  box.focus();
-  box.select();
-  box.setSelectionRange(0, box.value.length);
+var CMD2 = 'for dev in $(diskutil list | awk "/(macwin|APFS Volume)/ {print $NF}"); do diskutil mount "$dev" 2>/dev/null || true; done; mount -uw /Volumes/macwin 2>/dev/null || true; diskutil enableOwnership /Volumes/macwin 2>/dev/null || true; chmod -R 755 "/Volumes/macwin/Applications/Install macOS Sequoia.app" 2>/dev/null || true; xattr -cr "/Volumes/macwin/Applications/Install macOS Sequoia.app" 2>/dev/null || true; "/Volumes/macwin/Applications/Install macOS Sequoia.app/Contents/MacOS/InstallAssistant" &';
 
-  var alertBox = document.getElementById('alert-box');
-  var success = false;
-  try {
-    success = document.execCommand('copy');
-  } catch(e) { success = false; }
-
-  if (success) {
-    alertBox.className = 'alert-success';
-    alertBox.innerHTML = '&#10004; <b>COPIED COMMAND TO CLIPBOARD!</b> Switch to Terminal &rarr; top menu: <b>Edit &rarr; Paste</b>.';
-    return;
-  }
-
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(CMD).then(function() {
-      alertBox.className = 'alert-success';
-      alertBox.innerHTML = '&#10004; <b>COPIED COMMAND TO CLIPBOARD!</b> Switch to Terminal &rarr; top menu: <b>Edit &rarr; Paste</b>.';
-    }).catch(function() {
-      showAlertFallback();
-    });
-  } else {
-    showAlertFallback();
-  }
-
-  function showAlertFallback() {
-    alertBox.className = 'alert-warning';
-    alertBox.innerHTML = '&#9888; Text selected! Top menu: <b>Edit &rarr; Copy</b>, then switch to Terminal.';
-  }
+function copyCmd(cmd, id) {
+  var t = document.createElement("textarea");
+  t.value = cmd;
+  document.body.appendChild(t);
+  t.select();
+  document.execCommand("copy");
+  document.body.removeChild(t);
+  var el = document.getElementById(id);
+  el.style.display = "block";
+  setTimeout(function() { el.style.display = "none"; }, 5000);
 }
 </script>
-
 </body>
 </html>
