@@ -1,0 +1,479 @@
+[
+    {
+        "class": 48,
+        "hub_name": "USB#ROOT_HUB30#5&30292246&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8}",
+        "identifiers": {
+            "acpi_path": "\\_SB.PCI0.GP19.XHC4",
+            "bdf": [
+                6,
+                0,
+                4
+            ],
+            "driver_key": "{36fc9e60-c465-11cf-8056-444553540000}\\0004",
+            "instance_id": "PCI\\VEN_1022&DEV_15D7&SUBSYS_1CB21043&REV_00\\4&31621E10&0&0443",
+            "location_paths": [
+                "PCIROOT(0)#PCI(0803)#PCI(0004)",
+                "ACPI(_SB_)#ACPI(PCI0)#ACPI(GP19)#ACPI(XHC4)"
+            ],
+            "pci_id": [
+                "1022",
+                "15d7",
+                "1cb2",
+                "1043"
+            ]
+        },
+        "name": "AMD USB 3.10 eXtensible Host Controller - 1.20 (Microsoft)",
+        "port_count": 2,
+        "ports": [
+            {
+                "class": 2,
+                "comment": null,
+                "companion_info": {
+                    "hub": "USB#ROOT_HUB30#5&30292246&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8}",
+                    "multiple_companions": false,
+                    "port": 2
+                },
+                "devices": [],
+                "guessed": 9,
+                "index": 1,
+                "name": "Port 1",
+                "selected": false,
+                "selection_index": 1,
+                "status": "NoDeviceConnected",
+                "type": null,
+                "type_c": true,
+                "user_connectable": true
+            },
+            {
+                "class": 3,
+                "comment": null,
+                "companion_info": {
+                    "hub": "USB#ROOT_HUB30#5&30292246&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8}",
+                    "multiple_companions": false,
+                    "port": 1
+                },
+                "devices": [],
+                "guessed": 9,
+                "index": 2,
+                "name": "Port 2",
+                "selected": false,
+                "selection_index": 2,
+                "status": "NoDeviceConnected",
+                "type": null,
+                "type_c": true,
+                "user_connectable": true
+            }
+        ],
+        "selected_count": 0
+    },
+    {
+        "class": 48,
+        "hub_name": "USB#ROOT_HUB30#5&1f3e60d1&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8}",
+        "identifiers": {
+            "acpi_path": "\\_SB.PCI0.GP17.XHC1",
+            "bdf": [
+                5,
+                0,
+                4
+            ],
+            "driver_key": "{36fc9e60-c465-11cf-8056-444553540000}\\0001",
+            "instance_id": "PCI\\VEN_1022&DEV_161E&SUBSYS_1CB21043&REV_00\\4&31F4EC98&0&0441",
+            "location_paths": [
+                "PCIROOT(0)#PCI(0801)#PCI(0004)",
+                "ACPI(_SB_)#ACPI(PCI0)#ACPI(GP17)#ACPI(XHC1)"
+            ],
+            "pci_id": [
+                "1022",
+                "161e",
+                "1cb2",
+                "1043"
+            ]
+        },
+        "name": "AMD USB 3.10 eXtensible Host Controller - 1.20 (Microsoft)",
+        "port_count": 5,
+        "ports": [
+            {
+                "class": 2,
+                "comment": null,
+                "companion_info": {
+                    "hub": "USB#ROOT_HUB30#5&1f3e60d1&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8}",
+                    "multiple_companions": false,
+                    "port": 4
+                },
+                "devices": [
+                    {
+                        "devices": [],
+                        "instance_id": "USB\\VID_0781&PID_5567\\4C530012040205100010",
+                        "name": "Cruzer Blade",
+                        "speed": 2
+                    }
+                ],
+                "guessed": 3,
+                "index": 1,
+                "name": "Port 1",
+                "selected": true,
+                "selection_index": 3,
+                "status": "DeviceConnected",
+                "type": null,
+                "type_c": false,
+                "user_connectable": true
+            },
+            {
+                "class": 2,
+                "comment": null,
+                "companion_info": {
+                    "hub": "USB#ROOT_HUB30#5&1f3e60d1&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8}",
+                    "multiple_companions": false,
+                    "port": 5
+                },
+                "devices": [
+                    {
+                        "devices": [],
+                        "instance_id": "USB\\VID_1532&PID_0094\\000000000000",
+                        "name": "Orochi V2",
+                        "speed": 1
+                    }
+                ],
+                "guessed": 3,
+                "index": 2,
+                "name": "Port 2",
+                "selected": true,
+                "selection_index": 4,
+                "status": "DeviceConnected",
+                "type": null,
+                "type_c": false,
+                "user_connectable": true
+            },
+            {
+                "class": 2,
+                "comment": null,
+                "companion_info": {
+                    "hub": "",
+                    "multiple_companions": false,
+                    "port": 0
+                },
+                "devices": [],
+                "guessed": 255,
+                "index": 3,
+                "name": "Port 3",
+                "selected": false,
+                "selection_index": 5,
+                "status": "NoDeviceConnected",
+                "type": null,
+                "type_c": false,
+                "user_connectable": false
+            },
+            {
+                "class": 3,
+                "comment": null,
+                "companion_info": {
+                    "hub": "USB#ROOT_HUB30#5&1f3e60d1&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8}",
+                    "multiple_companions": false,
+                    "port": 1
+                },
+                "devices": [],
+                "guessed": 3,
+                "index": 4,
+                "name": "Port 4",
+                "selected": true,
+                "selection_index": 6,
+                "status": "NoDeviceConnected",
+                "type": null,
+                "type_c": false,
+                "user_connectable": true
+            },
+            {
+                "class": 3,
+                "comment": null,
+                "companion_info": {
+                    "hub": "USB#ROOT_HUB30#5&1f3e60d1&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8}",
+                    "multiple_companions": false,
+                    "port": 2
+                },
+                "devices": [],
+                "guessed": 3,
+                "index": 5,
+                "name": "Port 5",
+                "selected": true,
+                "selection_index": 7,
+                "status": "NoDeviceConnected",
+                "type": null,
+                "type_c": false,
+                "user_connectable": true
+            }
+        ],
+        "selected_count": 4
+    },
+    {
+        "class": 48,
+        "hub_name": "USB#ROOT_HUB30#5&355f4549&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8}",
+        "identifiers": {
+            "acpi_path": "\\_SB.PCI0.GP19.XHC3",
+            "bdf": [
+                6,
+                0,
+                3
+            ],
+            "driver_key": "{36fc9e60-c465-11cf-8056-444553540000}\\0003",
+            "instance_id": "PCI\\VEN_1022&DEV_15D6&SUBSYS_1CB21043&REV_00\\4&31621E10&0&0343",
+            "location_paths": [
+                "PCIROOT(0)#PCI(0803)#PCI(0003)",
+                "ACPI(_SB_)#ACPI(PCI0)#ACPI(GP19)#ACPI(XHC3)"
+            ],
+            "pci_id": [
+                "1022",
+                "15d6",
+                "1cb2",
+                "1043"
+            ]
+        },
+        "name": "AMD USB 3.10 eXtensible Host Controller - 1.20 (Microsoft)",
+        "port_count": 2,
+        "ports": [
+            {
+                "class": 2,
+                "comment": null,
+                "companion_info": {
+                    "hub": "USB#ROOT_HUB30#5&355f4549&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8}",
+                    "multiple_companions": false,
+                    "port": 2
+                },
+                "devices": [],
+                "guessed": 9,
+                "index": 1,
+                "name": "Port 1",
+                "selected": false,
+                "selection_index": 8,
+                "status": "NoDeviceConnected",
+                "type": null,
+                "type_c": true,
+                "user_connectable": true
+            },
+            {
+                "class": 3,
+                "comment": null,
+                "companion_info": {
+                    "hub": "USB#ROOT_HUB30#5&355f4549&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8}",
+                    "multiple_companions": false,
+                    "port": 1
+                },
+                "devices": [],
+                "guessed": 9,
+                "index": 2,
+                "name": "Port 2",
+                "selected": false,
+                "selection_index": 9,
+                "status": "NoDeviceConnected",
+                "type": null,
+                "type_c": true,
+                "user_connectable": true
+            }
+        ],
+        "selected_count": 0
+    },
+    {
+        "class": 48,
+        "hub_name": "USB#ROOT_HUB30#5&2b689773&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8}",
+        "identifiers": {
+            "acpi_path": "\\_SB.PCI0.GP19.XHC2",
+            "bdf": [
+                6,
+                0,
+                0
+            ],
+            "driver_key": "{36fc9e60-c465-11cf-8056-444553540000}\\0002",
+            "instance_id": "PCI\\VEN_1022&DEV_161F&SUBSYS_1CB21043&REV_00\\4&31621E10&0&0043",
+            "location_paths": [
+                "PCIROOT(0)#PCI(0803)#PCI(0000)",
+                "ACPI(_SB_)#ACPI(PCI0)#ACPI(GP19)#ACPI(XHC2)"
+            ],
+            "pci_id": [
+                "1022",
+                "161f",
+                "1cb2",
+                "1043"
+            ]
+        },
+        "name": "AMD USB 2.0 eXtensible Host Controller - 1.20 (Microsoft)",
+        "port_count": 1,
+        "ports": [
+            {
+                "class": 2,
+                "comment": null,
+                "companion_info": {
+                    "hub": "",
+                    "multiple_companions": false,
+                    "port": 0
+                },
+                "devices": [],
+                "guessed": 255,
+                "index": 1,
+                "name": "Port 1",
+                "selected": false,
+                "selection_index": 10,
+                "status": "NoDeviceConnected",
+                "type": null,
+                "type_c": false,
+                "user_connectable": false
+            }
+        ],
+        "selected_count": 0
+    },
+    {
+        "class": 48,
+        "hub_name": "USB#ROOT_HUB30#5&aaf3cb7&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8}",
+        "identifiers": {
+            "acpi_path": "\\_SB.PCI0.GP17.XHC0",
+            "bdf": [
+                5,
+                0,
+                3
+            ],
+            "driver_key": "{36fc9e60-c465-11cf-8056-444553540000}\\0000",
+            "instance_id": "PCI\\VEN_1022&DEV_161D&SUBSYS_1CB21043&REV_00\\4&31F4EC98&0&0341",
+            "location_paths": [
+                "PCIROOT(0)#PCI(0801)#PCI(0003)",
+                "ACPI(_SB_)#ACPI(PCI0)#ACPI(GP17)#ACPI(XHC0)"
+            ],
+            "pci_id": [
+                "1022",
+                "161d",
+                "1cb2",
+                "1043"
+            ]
+        },
+        "name": "AMD USB 3.10 eXtensible Host Controller - 1.20 (Microsoft)",
+        "port_count": 6,
+        "ports": [
+            {
+                "class": 2,
+                "comment": null,
+                "companion_info": {
+                    "hub": "",
+                    "multiple_companions": false,
+                    "port": 0
+                },
+                "devices": [],
+                "guessed": 255,
+                "index": 1,
+                "name": "Port 1",
+                "selected": false,
+                "selection_index": 11,
+                "status": "NoDeviceConnected",
+                "type": null,
+                "type_c": false,
+                "user_connectable": false
+            },
+            {
+                "class": 2,
+                "comment": null,
+                "companion_info": {
+                    "hub": "",
+                    "multiple_companions": false,
+                    "port": 0
+                },
+                "devices": [],
+                "guessed": 255,
+                "index": 2,
+                "name": "Port 2",
+                "selected": false,
+                "selection_index": 12,
+                "status": "NoDeviceConnected",
+                "type": null,
+                "type_c": false,
+                "user_connectable": false
+            },
+            {
+                "class": 2,
+                "comment": null,
+                "companion_info": {
+                    "hub": "",
+                    "multiple_companions": false,
+                    "port": 0
+                },
+                "devices": [
+                    {
+                        "devices": [],
+                        "instance_id": "USB\\VID_0B05&PID_19B6\\6&35C692EE&0&3",
+                        "name": "N-KEY Device",
+                        "speed": 1
+                    }
+                ],
+                "guessed": 255,
+                "index": 3,
+                "name": "Port 3",
+                "selected": true,
+                "selection_index": 13,
+                "status": "DeviceConnected",
+                "type": null,
+                "type_c": false,
+                "user_connectable": false
+            },
+            {
+                "class": 2,
+                "comment": null,
+                "companion_info": {
+                    "hub": "",
+                    "multiple_companions": false,
+                    "port": 0
+                },
+                "devices": [
+                    {
+                        "devices": [],
+                        "instance_id": "USB\\VID_0489&PID_E0E2\\000000000",
+                        "name": "Wireless_Device",
+                        "speed": 2
+                    }
+                ],
+                "guessed": 255,
+                "index": 4,
+                "name": "Port 4",
+                "selected": true,
+                "selection_index": 14,
+                "status": "DeviceConnected",
+                "type": null,
+                "type_c": false,
+                "user_connectable": false
+            },
+            {
+                "class": 3,
+                "comment": null,
+                "companion_info": {
+                    "hub": "",
+                    "multiple_companions": false,
+                    "port": 0
+                },
+                "devices": [],
+                "guessed": 255,
+                "index": 5,
+                "name": "Port 5",
+                "selected": false,
+                "selection_index": 15,
+                "status": "NoDeviceConnected",
+                "type": null,
+                "type_c": false,
+                "user_connectable": false
+            },
+            {
+                "class": 3,
+                "comment": null,
+                "companion_info": {
+                    "hub": "",
+                    "multiple_companions": false,
+                    "port": 0
+                },
+                "devices": [],
+                "guessed": 255,
+                "index": 6,
+                "name": "Port 6",
+                "selected": false,
+                "selection_index": 16,
+                "status": "NoDeviceConnected",
+                "type": null,
+                "type_c": false,
+                "user_connectable": false
+            }
+        ],
+        "selected_count": 2
+    }
+]

@@ -1,0 +1,31 @@
+# Large installation assets & disk images
+*.pkg
+*.dmg
+*.iso
+*.raw
+*.cpio
+
+# Archives & binaries
+*.zip
+*.tar.*
+*.exe
+iasl-legacy.exe
+USBToolBox.exe
+
+# Temporary files & debug logs
+*.log
+opencore-*.txt
+dp.txt
+diskpart_setup.txt
+
+# Backup & other hardware folders
+Acer-Nitro-EFI/
+com.apple.recovery.boot/
+USBToolBox-kext/
+*.bat
+*.ps1
+
+# Temporary scratch scripts
+write_scripts.py
+check_parent.py
+write_installer.py
