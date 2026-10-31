@@ -52,7 +52,8 @@ fi
 echo "SUCCESS: 'macwin' is independent and READ-WRITE!"
 
 echo ">>> Step 2: Cleaning old staging directories on $TARGET..."
-chflags -R nouchg "$TARGET/macOS Install Data" 2>/dev/null || true
+chflags -R 0 "$TARGET/macOS Install Data" 2>/dev/null || true
+chflags -R noschg,nouchg "$TARGET/macOS Install Data" 2>/dev/null || true
 rm -rf "$TARGET/macOS Install Data" 2>/dev/null || true
 rm -rf "$TARGET/com.apple.recovery.boot" 2>/dev/null || true
 rm -rf "$TARGET/Install."* 2>/dev/null || true
@@ -83,7 +84,10 @@ fi
 
 echo ">>> Step 4: Locating and preparing Install macOS Sequoia.app..."
 APP=""
-for cand in     "$TARGET/Applications/Install macOS Sequoia.app"     "/Volumes/INSTALLER/Applications/Install macOS Sequoia.app"     "/Applications/Install macOS Sequoia.app"; do
+for cand in \
+    "$TARGET/Applications/Install macOS Sequoia.app" \
+    "/Volumes/INSTALLER/Applications/Install macOS Sequoia.app" \
+    "/Applications/Install macOS Sequoia.app"; do
     if [ -d "$cand" ]; then
         APP="$cand"
         break
@@ -93,7 +97,10 @@ done
 if [ -z "$APP" ]; then
     echo "Installer app not found on macwin. Checking for InstallAssistant.pkg..."
     PKG=""
-    for cand_pkg in         "/Volumes/INSTALLER/InstallAssistant.pkg"         "/Volumes/OS/InstallAssistant.pkg"         "/Volumes/OPENCORE/InstallAssistant.pkg"; do
+    for cand_pkg in \
+        "/Volumes/INSTALLER/InstallAssistant.pkg" \
+        "/Volumes/OS/InstallAssistant.pkg" \
+        "/Volumes/OPENCORE/InstallAssistant.pkg"; do
         if [ -f "$cand_pkg" ]; then
             PKG="$cand_pkg"
             break
@@ -131,32 +138,32 @@ echo ">>> Progress: 0% ... 100%"
 echo "=========================================================="
 echo ""
 
-if "$APP/Contents/Resources/startosinstall" --volume "$TARGET" --agreetolicense --nointeraction; then
+set +e
+"$APP/Contents/Resources/startosinstall" --volume "$TARGET" --agreetolicense
+RET=$?
+set -e
+
+if [ $RET -eq 0 ]; then
+    echo ""
     echo "startosinstall finished successfully!"
+    sync
+    sync
+    echo ""
+    echo "=========================================================="
+    echo "    STAGE 1 COMPLETED 100%!"
+    echo "=========================================================="
+    echo "NEXT STEPS:"
+    echo "1. The laptop will attempt to restart in 5 seconds."
+    echo "2. When it pauses at 'Restarting...' (ACPI shutdown pause):"
+    echo "   - THIS IS 100% NORMAL. The bootloader is safely written!"
+    echo "   - Wait 20 seconds, then HOLD POWER BUTTON for 5 seconds to turn off."
+    echo "   - Turn the laptop back on."
+    echo "3. In OpenCore picker, select 'macOS Installer' and press Enter."
+    echo "   - It will boot into Stage 2 with the Apple progress bar!"
+    echo "=========================================================="
 else
     echo ""
-    echo ">>> startosinstall encountered a permission/authorization error."
-    echo ">>> Launching official Apple GUI installer window directly on screen..."
-    "$APP/Contents/MacOS/InstallAssistant" &
-    echo ">>> The GUI installer window is now opening!"
-    echo ">>> Click Continue -> Agree -> select macwin -> click Install."
-    exit 0
+    echo "ERROR: startosinstall exited with code $RET"
+    echo "Please check the terminal output above."
+    exit $RET
 fi
-
-sync
-sync
-
-echo ""
-echo "=========================================================="
-echo "    STAGE 1 COMPLETED 100%!"
-echo "=========================================================="
-echo "NEXT STEPS:"
-echo "1. The laptop will attempt to restart in 5 seconds."
-echo "2. When it pauses at 'Restarting...' (ACPI shutdown pause):"
-echo "   - THIS IS 100% NORMAL. The bootloader is safely written!"
-echo "   - Wait 20 seconds, then HOLD POWER BUTTON for 5 seconds to turn off."
-echo "   - Turn the laptop back on."
-echo "3. In OpenCore picker, you will now see: 'macOS Installer'!"
-echo "   - Select 'macOS Installer' and press Enter."
-echo "   - It will boot into Stage 2 with the Apple progress bar!"
-echo "=========================================================="

@@ -39,43 +39,30 @@
   <h1>macOS Sequoia Offline Installation</h1>
   <p class="subtitle">Click <strong>Copy Command</strong> below, then paste into <strong>Terminal</strong> to begin.</p>
 
-  <!-- OPTION 1: RECOMMENDED AUTOMATED INSTALLER -->
+  <!-- OPTION 1: AUTOMATED INSTALLER -->
   <div class="section">
     <div class="section-title">
       <span>Option 1: Automated Offline Installer</span>
       <span class="badge">Recommended</span>
     </div>
-    <textarea id="cmd1" class="cmd-box" rows="3" readonly onclick="autoSelect(this, 'fb1')">for dev in $(diskutil list | awk '/(macwin|APFS Volume)/ {print $NF}'); do diskutil mount "$dev" 2>/dev/null || true; done; for f in "/Volumes/INSTALLER/stage2.sh" "/Volumes/OPENCORE/stage2.sh" "/Volumes/BOOT/stage2.sh" "/Volumes/macwin/stage2.sh"; do [ -f "$f" ] && bash "$f" && break; done</textarea>
+    <textarea id="cmd1" class="cmd-box" rows="2" readonly onclick="autoSelect(this, 'fb1')">bash /Volumes/OPENCORE/stage2.sh || bash /Volumes/INSTALLER/stage2.sh || bash /Volumes/macwin/stage2.sh</textarea>
     <button id="btn1" class="btn btn-green" onclick="doCopy('cmd1', 'btn1', 'fb1')">
       📋 Copy Automated Installer Command
     </button>
     <div id="fb1" class="feedback"></div>
   </div>
 
-  <!-- SHORT / SIMPLE COMMAND -->
+  <!-- OPTION 2: DIRECT STARTOSINSTALL (NO SCRIPT) -->
   <div class="section">
     <div class="section-title">
-      <span>Option 2: Short Direct Command</span>
-      <span class="badge" style="background:#6366f1">Direct</span>
+      <span>Option 2: Direct Apple startosinstall Command</span>
+      <span class="badge" style="background:#6366f1">Direct Binary</span>
     </div>
-    <textarea id="cmd2" class="cmd-box" rows="1" readonly onclick="autoSelect(this, 'fb2')">bash /Volumes/OPENCORE/stage2.sh || bash /Volumes/INSTALLER/stage2.sh</textarea>
+    <textarea id="cmd2" class="cmd-box" rows="2" readonly onclick="autoSelect(this, 'fb2')">"/Volumes/macwin/Applications/Install macOS Sequoia.app/Contents/Resources/startosinstall" --volume /Volumes/macwin --agreetolicense</textarea>
     <button id="btn2" class="btn btn-blue" onclick="doCopy('cmd2', 'btn2', 'fb2')">
-      📋 Copy Short Direct Command
+      📋 Copy Direct startosinstall Command
     </button>
     <div id="fb2" class="feedback"></div>
-  </div>
-
-  <!-- OPTION 3: GUI DIRECT LAUNCH -->
-  <div class="section">
-    <div class="section-title">
-      <span>Option 3: Launch GUI Installer Window Directly</span>
-      <span class="badge" style="background:#64748b">Fallback</span>
-    </div>
-    <textarea id="cmd3" class="cmd-box" rows="2" readonly onclick="autoSelect(this, 'fb3')">diskutil mount macwin 2>/dev/null || true; diskutil enableOwnership /Volumes/macwin 2>/dev/null || true; chmod -R 755 "/Volumes/macwin/Applications/Install macOS Sequoia.app" 2>/dev/null || true; "/Volumes/macwin/Applications/Install macOS Sequoia.app/Contents/MacOS/InstallAssistant" &</textarea>
-    <button id="btn3" class="btn btn-blue" onclick="doCopy('cmd3', 'btn3', 'fb3')">
-      📋 Copy GUI Launcher Command
-    </button>
-    <div id="fb3" class="feedback"></div>
   </div>
 
   <div class="steps-box">
@@ -108,15 +95,12 @@ function doCopy(textareaId, btnId, fbId) {
   el.setSelectionRange(0, el.value.length);
   
   var copied = false;
-  
-  // Method 1: document.execCommand
   try {
     copied = document.execCommand('copy');
   } catch (err) {
     copied = false;
   }
   
-  // Method 2: navigator.clipboard (if available)
   if (!copied && navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(el.value).then(function() {
       handleSuccess(btn, originalBtnText, fbId);
